@@ -95,7 +95,7 @@ def main(args):
 	period = args.period
 	
 	if not (os.path.isdir('./TFRecord')):
-		os.path.makedirs('./TFRecord')
+		os.makedirs('./TFRecord')
 	TFRecord_path='./TFRecord'
 	
 	save_path = os.path.join(TFRecord_path,'%s.tfrecord'%period)
