@@ -125,10 +125,10 @@ def main(args):
 
 	if period=='validation':
 		for image_path in (os.listdir(validation_path)):
-		label_path=os.path.splitext(image_path)[0]
-		image,label= load_image(image_path,'validation')
-		save_image(image,label,writer,augment=True)
-		print('Done Preparing validation dataset')
+			label_path=os.path.splitext(image_path)[0]
+			image,label= load_image(image_path,'validation')
+			save_image(image,label,writer,augment=True)
+			print('Done Preparing validation dataset')
 	writer.close()
 
 
