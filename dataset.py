@@ -94,7 +94,7 @@ def main(args):
 	
 	period = args.period
 	
-	if(!os.path.isdir('./TFRecord')):
+	if not (os.path.isdir('./TFRecord')):
 		os.path.makedirs('./TFRecord')
 	TFRecord_path='./TFRecord'
 	
