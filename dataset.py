@@ -93,6 +93,9 @@ def main(args):
 	dataset_path3 = './BDCI2017-jiage-Semi'
 	
 	period = args.period
+	
+	if(!os.path.isdir('./TFRecord')):
+		os.path.makedirs('./TFRecord')
 	TFRecord_path='./TFRecord'
 	
 	save_path = os.path.join(TFRecord_path,'%s.tfrecord'%period)
