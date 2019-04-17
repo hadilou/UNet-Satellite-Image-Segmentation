@@ -5,11 +5,11 @@ import tensorflow as tf
 import os
 import random
 import argparse
-
-train_path='/train'
-validation_path='./validation'
-train_annotation_path='./train_annotation--'
-validation_annotation='./validation_annotation--'
+from PIL import Image
+train_path='/Users/allora/Documents/Personal/bitirme2/UNET/train'
+validation_path='/Users/allora/Documents/Personal/bitirme2/UNET/validation'
+train_annotation_path='/Users/allora/Documents/Personal/bitirme2/UNET/train_annotation'
+validation_annotation_path='/Users/allora/Documents/Personal/bitirme2/UNET/validation_annotation'
 	
 def _int64_feature(value):
 	return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
@@ -18,20 +18,24 @@ def _bytes_feature(value):
 	return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
 def load_image(path,period,load_label=True):
-	img_path = os.path.join(path,'.jpg')
-	
-	image = cv2.imread(img_path,flags=cv2.IMREAD_UNCHANGED)
+	img_path = path
+	#image = cv2.imread(img_path,flags=cv2.IMREAD_UNCHANGED)
+	image = np.array(Image.open(img_path))
 	image = image[:,:,0:3]
 	image = np.uint8(image)
-	if period == train:
-		root=train_path
+
+	if period == "train":
+		index_path = os.path.split(img_path)[1]
+		root = os.path.join(train_annotation_path,index_path)
 	else:
-		root=validation_path
+		index_path = os.path.split(img_path)[1]
+		root=os.path.join(validation_annotation_path,index_path)
 	if load_label:
-		label_path=os.path.splitext(root)[0]
-		label_path=os.path.join(label_path,'%.png')
-		label = cv2.imread(label_path)
-		label = label[:,:,0]
+		label_path=root.replace(".jpg",".png")
+		#label_path=os.path.join(label_path,'.png')
+		#label = cv2.imread(label_path)
+		label = np.array(Image.open(label_path))
+		#label = label[:,:,0]
 		label = np.uint8(label)
 		return image, label
 	return image
@@ -80,18 +84,9 @@ def save_image(sub_image, sub_label, writer,augment=False):
 		writer.write(example.SerializeToString())
 
 def main(args):
-	train_path='/train'
+	train_path='./train'
 	validation_path='./validation'
-	train_annotation_path='./train_annotation'
-	validation_annotation='./validation_annotation'
-	
-	dataset_name='BDCI'
-	dataset_name2 = 'dataset'
-	dataset_name3 = 'BDCI-semi'
-	dataset_path='./BDCI2017-jiage'
-	dataset_path2 = './dataset'
-	dataset_path3 = './BDCI2017-jiage-Semi'
-	
+
 	period = args.period
 	
 	if not (os.path.isdir('./TFRecord')):
@@ -101,12 +96,11 @@ def main(args):
 	save_path = os.path.join(TFRecord_path,'%s.tfrecord'%period)
 	writer = tf.python_io.TFRecordWriter(save_path)
 
-	patch_size = 256
+	#patch_size = 256
 
 	if period=='train':
 		for image_path in (os.listdir(train_path)):
-			label_path=os.path.splitext(image_path)[0]
-			image,label= load_image(image_path,'train')
+			image,label= load_image(os.path.join(train_path,image_path),'train')
 			save_image(image,label,writer,augment=True)
 			print('Done Preparing traing dataset')
 
@@ -128,8 +122,7 @@ def main(args):
 
 	if period=='validation':
 		for image_path in (os.listdir(validation_path)):
-			label_path=os.path.splitext(image_path)[0]
-			image,label= load_image(image_path,'validation')
+			image,label= load_image(os.path.join(validation_path,image_path),'validation')
 			save_image(image,label,writer,augment=True)
 			print('Done Preparing validation dataset')
 	writer.close()

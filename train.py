@@ -34,7 +34,7 @@ def main(args):
 	patch_size=256
 	batch_size = 1
 	max_iteration = 120000
-	class_num = 5
+	class_num = 3
 	learning_rate=1e-5
 	momentum = 0.99
 	os.environ["CUDA_VISIBLE_DEVICES"] = "1,3"
