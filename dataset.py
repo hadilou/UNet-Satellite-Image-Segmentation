@@ -6,15 +6,16 @@ import os
 import random
 import argparse
 from PIL import Image
-import strings as strings
+#import strings as strings
 
-train_path='/Users/allora/Documents/Personal/bitirme2/UNET/train'
-validation_path='/Users/allora/Documents/Personal/bitirme2/UNET/validation'
-train_annotation_path='/Users/allora/Documents/Personal/bitirme2/UNET/train_annotation'
-validation_annotation_path='/Users/allora/Documents/Personal/bitirme2/UNET/validation_annotation'
+##train_path='/Users/allora/Documents/Personal/bitirme2/UNET/train'
+#validation_path='/Users/allora/Documents/Personal/bitirme2/UNET/validation'
+#train_annotation_path='/Users/allora/Documents/Personal/bitirme2/UNET/train_annotation'
+#validation_annotation_path='/Users/allora/Documents/Personal/bitirme2/UNET/validation_annotation'
 
-STRINGS = strings.STRINGS()
-STRINGS.string(train_path,validation_path,train_annotation_path,validation_annotation_path)
+
+#STRINGS = strings.STRINGS()
+#STRINGS.string(train_path,validation_path,train_annotation_path,validation_annotation_path)
 
 	
 def _int64_feature(value):
@@ -23,7 +24,7 @@ def _int64_feature(value):
 def _bytes_feature(value):
 	return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
-def load_image(path,period,load_label=True):
+def load_image(path,train_path,validation_path,train_annotation_path,validation_annotation_path,period,load_label=True):
 	img_path = path
 	#image = cv2.imread(img_path,flags=cv2.IMREAD_UNCHANGED)
 	image = np.array(Image.open(img_path))
@@ -32,10 +33,10 @@ def load_image(path,period,load_label=True):
 
 	if period == "train":
 		index_path = os.path.split(img_path)[1]
-		root = os.path.join(STRINGS.TRAIN_ANNOTATION_PATH,index_path)
+		root = os.path.join(train_annotation_path,index_path)
 	else:
 		index_path = os.path.split(img_path)[1]
-		root=os.path.join(STRINGS.VALIDATION_ANNOTATION_PATH,index_path)
+		root=os.path.join(validation_annotation_path,index_path)
 	if load_label:
 		label_path=root.replace(".jpg",".png")
 		#label_path=os.path.join(label_path,'.png')
@@ -90,8 +91,11 @@ def save_image(sub_image, sub_label, writer,augment=False):
 		writer.write(example.SerializeToString())
 
 def main(args):
-	train_path= STRINGS.TRAIN_PATH                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-	validation_path=STRINGS.VALIDATION_PATH
+	train_path= args.train_path
+	validation_path = args.validation_path
+	train_annotation_path = args.train_annotation_path
+	validation_annotation_path = args.validation_annotation_path                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+	#validation_path=STRINGS.VALIDATION_PATH
 
 	period = args.period
 	
@@ -105,8 +109,13 @@ def main(args):
 	#patch_size = 256
 
 	if period=='train':
-		for image_path in (os.listdir(STRINGS.TRAIN_PATH)):
-			image,label= load_image(os.path.join(STRINGS.TRAIN_PATH,image_path),'train')
+		for image_path in (os.listdir(train_path)):
+			image,label= load_image(os.path.join(train_path,image_path),
+				train_path,
+				validation_path,
+				train_annotation_path,
+				validation_annotation_path,
+				'train')
 			save_image(image,label,writer,augment=True)
 			#print('Done Preparing traing dataset')
 
@@ -127,8 +136,13 @@ def main(args):
 		# 		print('NO.%d patch in %s-%s-%d is saving...'%(j, dataset_name2, period,i))
 
 	if period=='validation':
-		for image_path in (os.listdir(STRINGS.VALIDATION_PATH)):
-			image,label= load_image(os.path.join(STRINGS.VALIDATION_PATH,image_path),'validation')
+		for image_path in (os.listdir(validation_path)):
+			image,label= load_image(os.path.join(validation_path,image_path),
+				train_path,
+				validation_path,
+				train_annotation_path,
+				validation_annotation_path,
+				'validation')
 			save_image(image,label,writer,augment=True)
 			#print('Done Preparing validation dataset')
 	writer.close()
@@ -138,5 +152,9 @@ def main(args):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(usage="it's usage tip.", description="help info.")
 	parser.add_argument("--period", choices=['train', 'validation'], default="train", help="period")
+	parser.add_argument("--train_path", default="", help="train_path")
+	parser.add_argument("--validation_path", default="", help="validation_path")
+	parser.add_argument("--train_annotation_path", default="", help="train_annotation_path")
+	parser.add_argument("--validation_annotation_path", default="", help="validation_annotation_path")
 	args = parser.parse_args()
 	main(args)
