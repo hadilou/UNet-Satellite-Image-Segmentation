@@ -6,10 +6,16 @@ import os
 import random
 import argparse
 from PIL import Image
+import strings as strings
+
 train_path='/Users/allora/Documents/Personal/bitirme2/UNET/train'
 validation_path='/Users/allora/Documents/Personal/bitirme2/UNET/validation'
 train_annotation_path='/Users/allora/Documents/Personal/bitirme2/UNET/train_annotation'
 validation_annotation_path='/Users/allora/Documents/Personal/bitirme2/UNET/validation_annotation'
+
+STRINGS = strings.STRINGS()
+STRINGS.string(train_path,validation_path,train_annotation_path,validation_annotation_path)
+
 	
 def _int64_feature(value):
 	return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
@@ -26,10 +32,10 @@ def load_image(path,period,load_label=True):
 
 	if period == "train":
 		index_path = os.path.split(img_path)[1]
-		root = os.path.join(train_annotation_path,index_path)
+		root = os.path.join(STRINGS.TRAIN_ANNOTATION_PATH,index_path)
 	else:
 		index_path = os.path.split(img_path)[1]
-		root=os.path.join(validation_annotation_path,index_path)
+		root=os.path.join(STRINGS.VALIDATION_ANNOTATION_PATH,index_path)
 	if load_label:
 		label_path=root.replace(".jpg",".png")
 		#label_path=os.path.join(label_path,'.png')
@@ -84,8 +90,8 @@ def save_image(sub_image, sub_label, writer,augment=False):
 		writer.write(example.SerializeToString())
 
 def main(args):
-	train_path='./train'
-	validation_path='./validation'
+	train_path= STRINGS.TRAIN_PATH                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+	validation_path=STRINGS.VALIDATION_PATH
 
 	period = args.period
 	
@@ -99,10 +105,10 @@ def main(args):
 	#patch_size = 256
 
 	if period=='train':
-		for image_path in (os.listdir(train_path)):
-			image,label= load_image(os.path.join(train_path,image_path),'train')
+		for image_path in (os.listdir(STRINGS.TRAIN_PATH)):
+			image,label= load_image(os.path.join(STRINGS.TRAIN_PATH,image_path),'train')
 			save_image(image,label,writer,augment=True)
-			print('Done Preparing traing dataset')
+			#print('Done Preparing traing dataset')
 
 		# data_size = 5
 		# sample_size = 256
@@ -121,10 +127,10 @@ def main(args):
 		# 		print('NO.%d patch in %s-%s-%d is saving...'%(j, dataset_name2, period,i))
 
 	if period=='validation':
-		for image_path in (os.listdir(validation_path)):
-			image,label= load_image(os.path.join(validation_path,image_path),'validation')
+		for image_path in (os.listdir(STRINGS.VALIDATION_PATH)):
+			image,label= load_image(os.path.join(STRINGS.VALIDATION_PATH,image_path),'validation')
 			save_image(image,label,writer,augment=True)
-			print('Done Preparing validation dataset')
+			#print('Done Preparing validation dataset')
 	writer.close()
 
 
