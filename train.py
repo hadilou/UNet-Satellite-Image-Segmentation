@@ -5,6 +5,8 @@ import tensorflow as tf
 import os
 import factory
 import argparse
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 
 
 def load_data(path,patch_size=256):
