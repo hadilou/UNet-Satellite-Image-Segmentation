@@ -91,6 +91,7 @@ def save_image(sub_image, sub_label, writer,augment=False):
 		writer.write(example.SerializeToString())
 
 def main(args):
+	
 	train_path= args.train_path
 	validation_path = args.validation_path
 	train_annotation_path = args.train_annotation_path

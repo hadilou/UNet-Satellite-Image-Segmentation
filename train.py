@@ -27,9 +27,13 @@ def load_data(path,patch_size=256):
 	return image, label
 
 def main(args):
-	dataset_path = './TFRecord'
-	log_path='./log'
-	model_path='./model'
+	dataset_path = '/kaggle/input/kaggle/working'
+	if not (os.path.isdir('kaggle/input/kaggle/working/log')):
+		os.makedirs('kaggle/input/kaggle/working/log')
+	log_path='/kaggle/input/kaggle/working/log'
+	if not (os.path.isdir('/kaggle/input/kaggle/working/model')):
+		os.makedirs('kaggle/input/kaggle/working/model')
+	model_path='/kaggle/input/kaggle/working/model'
 	#model_name='UNet_ResNet_pure_itr50000'
 	#model_file = os.path.join(model_path,'%s.ckpt'%model_name)
 	period = 'train'
