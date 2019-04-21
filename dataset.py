@@ -99,9 +99,9 @@ def main(args):
 
 	period = args.period
 	
-	if not (os.path.isdir('./TFRecord')):
-		os.makedirs('./TFRecord')
-	TFRecord_path='./TFRecord'
+	if not (os.path.isdir('../kaggle/working')):
+		os.makedirs('../kaggle/working')
+	TFRecord_path='../kaggle/working'
 	
 	save_path = os.path.join(TFRecord_path,'%s.tfrecord'%period)
 	writer = tf.python_io.TFRecordWriter(save_path)
