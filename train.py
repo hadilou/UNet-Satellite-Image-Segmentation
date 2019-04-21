@@ -28,12 +28,12 @@ def load_data(path,patch_size=256):
 
 def main(args):
 	dataset_path = '/kaggle/input/kaggle/working'
-	if not (os.path.isdir('kaggle/input/kaggle/working/log')):
-		os.makedirs('kaggle/input/kaggle/working/log')
-	log_path='/kaggle/input/kaggle/working/log'
-	if not (os.path.isdir('/kaggle/input/kaggle/working/model')):
-		os.makedirs('kaggle/input/kaggle/working/model')
-	model_path='/kaggle/input/kaggle/working/model'
+	if not (os.path.isdir('../kaggle/working/log')):
+		os.makedirs('../kaggle/working/model')
+	log_path='../kaggle/working/log'
+	if not (os.path.isdir('../kaggle/working/model')):
+		os.makedirs('../kaggle/working/model')
+	model_path='../kaggle/working/model'
 	#model_name='UNet_ResNet_pure_itr50000'
 	#model_file = os.path.join(model_path,'%s.ckpt'%model_name)
 	period = 'train'
